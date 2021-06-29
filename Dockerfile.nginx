@@ -1,4 +1,4 @@
-FROM liararepo/static-platform:base
+FROM registry3.liara.ir/dhub-mirror/liararepo/static-platform:base
 
 COPY default_liara_nginx.conf /etc/nginx/conf.d/liara_nginx.conf
 
