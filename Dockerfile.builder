@@ -1,10 +1,10 @@
-FROM node:12-alpine as build
+FROM node:14 as build
 
 WORKDIR /app
 
-COPY default_liara_nginx.conf /app/liara_nginx.conf
+RUN apt-get update;apt-get install git python3 build-essential
 
-RUN apk add git bash python3 build-base
+COPY default_liara_nginx.conf /app/liara_nginx.conf
 
 COPY lib/* /usr/local/lib/liara/
 
@@ -16,15 +16,8 @@ ONBUILD ENV __NODE_MIRROR=${__NODE_MIRROR}
 ONBUILD ENV __NODE_MIRRORURL=${__NODE_MIRRORURL}
 ONBUILD ENV __NODE_GITHUBMIRRORURL=${__NODE_GITHUBMIRRORURL}
 
-ONBUILD RUN /usr/local/lib/liara/configure.sh
-
 ONBUILD COPY . /app
 
-ONBUILD RUN if [ -e /app/package-lock.json ]; \
-  then \
-    echo 'Running npm ci...' && npm ci; \
-  else \
-    echo 'Running npm install' && npm install; \
-fi
+ONBUILD RUN /usr/local/lib/liara/configure.sh
 
 ONBUILD RUN npm run build
